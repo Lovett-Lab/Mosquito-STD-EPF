@@ -1,0 +1,121 @@
+﻿Date,Replicate,Compartment,Position,Start,Stop,Couples,Total,Strain
+7/25/16,Replicate 1,c1 ,E1,18h49,5,20,30,An.gambiae Soumousso
+7/25/16,Replicate 1,c1 ,E2,na,na,0,0,An.gambiae Soumousso
+7/25/16,Replicate 1,c1 ,E3,18h49,19h07,0,20,An.gambiae Soumousso
+7/25/16,Replicate 1,c1 ,E4,18h49,19h07,4,40,An.gambiae Soumousso
+7/25/16,Replicate 1,c1 ,E5,na,na,0,0,An.gambiae Soumousso
+7/25/16,Replicate 1,c2 ,E1,18h49,19h07,20,60,An.gambiae Soumousso
+7/25/16,Replicate 1,c2 ,E2,na,na,0,0,An.gambiae Soumousso
+7/25/16,Replicate 1,c2 ,E3,18h49,19h07,5,na,An.gambiae Soumousso
+7/25/16,Replicate 1,c2 ,E4,18h49,19h07,10,60,An.gambiae Soumousso
+7/25/16,Replicate 1,c2 ,E5,na,na,0,0,An.gambiae Soumousso
+7/25/16,Replicate 1,c3 ,E1,18h49,19h07,31,,An.gambiae Soumousso
+7/25/16,Replicate 1,c3 ,E2,na,na,0,0,An.gambiae Soumousso
+7/25/16,Replicate 1,c3 ,E3,na,na,0,0,An.gambiae Soumousso
+7/25/16,Replicate 1,c3 ,E4,18h49,19h07,12,20,An.gambiae Soumousso
+7/25/16,Replicate 1,c3 ,E5,na,na,0,0,An.gambiae Soumousso
+7/25/16,Replicate 1,c4 ,E1,18h49,19h07,23,60,An.gambiae Soumousso
+7/25/16,Replicate 1,c4 ,E2,na,na,0,0,An.gambiae Soumousso
+7/25/16,Replicate 1,c4 ,E3,na,na,0,0,An.gambiae Soumousso
+7/25/16,Replicate 1,c4 ,E4,18h49,19h07,56,60,An.gambiae Soumousso
+7/25/16,Replicate 1,c4 ,E5,na,na,0,0,An.gambiae Soumousso
+7/26/16,Replicate 2,C1,E1,na,na,0,0,Anopheles coulizzii vk5
+7/26/16,Replicate 2,C1,E2,na,na,0,0,Anopheles coulizzii vk5
+7/26/16,Replicate 2,C1,E3,18H51,19HO6,0,15,Anopheles coulizzii vk5
+7/26/16,Replicate 2,C1,E4,18H51,19HO6,58,100,Anopheles coulizzii vk5
+7/26/16,Replicate 2,C1,E5,na,na,0,0,Anopheles coulizzii vk5
+7/26/16,Replicate 2,C2,E1,18H51,19HO6,35,60,Anopheles coulizzii vk5
+7/26/16,Replicate 2,C2,E2,na,na,0,0,Anopheles coulizzii vk5
+7/26/16,Replicate 2,C2,E3,na,na,0,0,Anopheles coulizzii vk5
+7/26/16,Replicate 2,C2,E4,18H51,19HO6,9,40,Anopheles coulizzii vk5
+7/26/16,Replicate 2,C2,E5,18H51,19HO6,10,40,Anopheles coulizzii vk5
+7/26/16,Replicate 2,C3,E1,18H51,19HO6,34,60,Anopheles coulizzii vk5
+7/26/16,Replicate 2,C3,E2,na,na,0,0,Anopheles coulizzii vk5
+7/26/16,Replicate 2,C3,E3,na,na,0,0,Anopheles coulizzii vk5
+7/26/16,Replicate 2,C3,E4,18H51,19HO6,0,15,Anopheles coulizzii vk5
+7/26/16,Replicate 2,C3,E5,18H51,19HO6,20,80,Anopheles coulizzii vk5
+7/26/16,Replicate 2,C4,E1,18H50,19H03,20,60,Anopheles coulizzii vk5
+7/26/16,Replicate 2,C4,E2,na,na,0,0,Anopheles coulizzii vk5
+7/26/16,Replicate 2,C4,E3,na,na,0,0,Anopheles coulizzii vk5
+7/26/16,Replicate 2,C4,E4,18H50,19H03,85,120,Anopheles coulizzii vk5
+7/26/16,Replicate 2,C4,E5,na,na,0,0,Anopheles coulizzii vk5
+7/27/16,Replicate 3,C1,E1,18h45,19h06,16,30,Anopheles coulizzii vk5
+7/27/16,Replicate 3,C1,E2,na,19h06,0,0,Anopheles coulizzii vk5
+7/27/16,Replicate 3,C1,E3,18h45,19h06,32,40,Anopheles coulizzii vk5
+7/27/16,Replicate 3,C1,E4,18h45,19h06,82,100,Anopheles coulizzii vk5
+7/27/16,Replicate 3,C1,E5,na,na,0,0,Anopheles coulizzii vk5
+7/27/16,Replicate 3,C2,E1,18h49,19h06,11,15,Anopheles coulizzii vk5
+7/27/16,Replicate 3,C2,E2,na,na,0,0,Anopheles coulizzii vk5
+7/27/16,Replicate 3,C2,E3,na,na,0,0,Anopheles coulizzii vk5
+7/27/16,Replicate 3,C2,E4,18h49,19h06,54,60,Anopheles coulizzii vk5
+7/27/16,Replicate 3,C2,E5,na,na,0,0,Anopheles coulizzii vk5
+7/27/16,Replicate 3,C3,E1,18h47,19H03,32,80,Anopheles coulizzii vk5
+7/27/16,Replicate 3,C3,E2,na,na,0,0,Anopheles coulizzii vk5
+7/27/16,Replicate 3,C3,E3,na,na,0,0,Anopheles coulizzii vk5
+7/27/16,Replicate 3,C3,E4,18h47,19H03,25,100,Anopheles coulizzii vk5
+7/27/16,Replicate 3,C3,E5,na,na,0,0,Anopheles coulizzii vk5
+7/27/16,Replicate 3,C4,E1,18h45,19h04,21,60,Anopheles coulizzii vk5
+7/27/16,Replicate 3,C4,E2,na,na,0,0,Anopheles coulizzii vk5
+7/27/16,Replicate 3,C4,E3,na,na,0,0,Anopheles coulizzii vk5
+7/27/16,Replicate 3,C4,E4,18h45,19h04,123,140,Anopheles coulizzii vk5
+7/27/16,Replicate 3,C4,E5,na,na,0,0,Anopheles coulizzii vk5
+7/28/16,Replicate 4,C1,E1,18h46,19h02,6,40,An.gambiae Soumousso
+7/28/16,Replicate 4,C1,E2,na,na,0,0,An.gambiae Soumousso
+7/28/16,Replicate 4,C1,E3,18h46,19h02,0,15,An.gambiae Soumousso
+7/28/16,Replicate 4,C1,E4,18h46,19h02,19,60,An.gambiae Soumousso
+7/28/16,Replicate 4,C1,E5,na,na,0,0,An.gambiae Soumousso
+7/28/16,Replicate 4,C2,E1,18h46,19h02,31,60,An.gambiae Soumousso
+7/28/16,Replicate 4,C2,E2,na,na,0,0,An.gambiae Soumousso
+7/28/16,Replicate 4,C2,E3,18h46,19h02,0,30,An.gambiae Soumousso
+7/28/16,Replicate 4,C2,E4,18h46,19h02,21,60,An.gambiae Soumousso
+7/28/16,Replicate 4,C2,E5,na,na,0,0,An.gambiae Soumousso
+7/28/16,Replicate 4,C3,E1,18h46,19h02,27,30,An.gambiae Soumousso
+7/28/16,Replicate 4,C3,E2,na,na,0,0,An.gambiae Soumousso
+7/28/16,Replicate 4,C3,E3,na,na,0,0,An.gambiae Soumousso
+7/28/16,Replicate 4,C3,E4,18h46,19h02,17,40,An.gambiae Soumousso
+7/28/16,Replicate 4,C3,E5,na,na,0,0,An.gambiae Soumousso
+7/28/16,Replicate 4,C4,E1,18h46,19h02,28,40,An.gambiae Soumousso
+7/28/16,Replicate 4,C4,E2,na,na,0,0,An.gambiae Soumousso
+7/28/16,Replicate 4,C4,E3,na,na,0,0,An.gambiae Soumousso
+7/28/16,Replicate 4,C4,E4,18h46,19h02,8,80,An.gambiae Soumousso
+7/28/16,Replicate 4,C4,E5,na,na,0,0,An.gambiae Soumousso
+7/29/16,Replicate 5,C1,E1,18h45,19h06,16,30,Anopheles coulizzii vk5
+7/29/16,Replicate 5,C1,E2,na,na,0,0,Anopheles coulizzii vk5
+7/29/16,Replicate 5,C1,E3,18h45,19h06,32,40,Anopheles coulizzii vk5
+7/29/16,Replicate 5,C1,E4,18h45,19h06,82,100,Anopheles coulizzii vk5
+7/29/16,Replicate 5,C1,E5,na,na,0,0,Anopheles coulizzii vk5
+7/29/16,Replicate 5,C2,E1,18h49,19h06,11,15,Anopheles coulizzii vk5
+7/29/16,Replicate 5,C2,E2,na,na,0,0,Anopheles coulizzii vk5
+7/29/16,Replicate 5,C2,E3,na,na,0,0,Anopheles coulizzii vk5
+7/29/16,Replicate 5,C2,E4,18h49,19h06,54,60,Anopheles coulizzii vk5
+7/29/16,Replicate 5,C2,E5,na,na,0,0,Anopheles coulizzii vk5
+7/29/16,Replicate 5,C3,E1,18h47,19H03,32,80,Anopheles coulizzii vk5
+7/29/16,Replicate 5,C3,E2,na,na,0,0,Anopheles coulizzii vk5
+7/29/16,Replicate 5,C3,E3,na,na,0,0,Anopheles coulizzii vk5
+7/29/16,Replicate 5,C3,E4,18h47,19H03,25,100,Anopheles coulizzii vk5
+7/29/16,Replicate 5,C3,E5,na,na,0,0,Anopheles coulizzii vk5
+7/29/16,Replicate 5,C4,E1,18h45,19h04,21,60,Anopheles coulizzii vk5
+7/29/16,Replicate 5,C4,E2,na,na,0,0,Anopheles coulizzii vk5
+7/29/16,Replicate 5,C4,E3,na,na,0,0,Anopheles coulizzii vk5
+7/29/16,Replicate 5,C4,E4,18h45,19h04,123,140,Anopheles coulizzii vk5
+7/29/16,Replicate 5,C4,E5,na,na,0,0,Anopheles coulizzii vk5
+7/30/16,Replicate 6,C1,E1,18h46,19h02,6,40,An.gambiae Soumousso
+7/30/16,Replicate 6,C1,E2,na,na,0,0,An.gambiae Soumousso
+7/30/16,Replicate 6,C1,E3,18h46,19h02,0,15,An.gambiae Soumousso
+7/30/16,Replicate 6,C1,E4,18h46,19h02,19,60,An.gambiae Soumousso
+7/30/16,Replicate 6,C1,E5,na,na,0,0,An.gambiae Soumousso
+7/30/16,Replicate 6,C2,E1,18h46,19h02,31,60,An.gambiae Soumousso
+7/30/16,Replicate 6,C2,E2,na,na,0,0,An.gambiae Soumousso
+7/30/16,Replicate 6,C2,E3,18h46,19h02,0,30,An.gambiae Soumousso
+7/30/16,Replicate 6,C2,E4,18h46,19h02,21,60,An.gambiae Soumousso
+7/30/16,Replicate 6,C2,E5,na,na,0,0,An.gambiae Soumousso
+7/30/16,Replicate 6,C3,E1,18h46,19h02,27,30,An.gambiae Soumousso
+7/30/16,Replicate 6,C3,E2,na,na,0,0,An.gambiae Soumousso
+7/30/16,Replicate 6,C3,E3,na,na,0,0,An.gambiae Soumousso
+7/30/16,Replicate 6,C3,E4,18h46,19h02,17,40,An.gambiae Soumousso
+7/30/16,Replicate 6,C3,E5,na,na,0,0,An.gambiae Soumousso
+7/30/16,Replicate 6,C4,E1,18h46,19h02,28,40,An.gambiae Soumousso
+7/30/16,Replicate 6,C4,E2,na,na,0,0,An.gambiae Soumousso
+7/30/16,Replicate 6,C4,E3,na,na,0,0,An.gambiae Soumousso
+7/30/16,Replicate 6,C4,E4,18h46,19h02,8,80,An.gambiae Soumousso
+7/30/16,Replicate 6,C4,E5,na,na,0,0,An.gambiae Soumousso

@@ -1,0 +1,521 @@
+---
+title: "STD Study Analysis"
+author: "Brian Lovett, PhD"
+date: "8/29/2024"
+output:
+  rmdformats::readthedown:
+    highlight: kate
+    code_folding: hide
+    toc: 3
+    css: rtd_add_style.css
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, fig.width=12, fig.height=9) 
+library(tidyverse)
+library(agricolae)
+library(scales)
+library(readr)
+library(survival)
+library(broom)
+library(lubridate)
+
+```
+
+## Introduction
+
+This script calculates statistics and visualizes data collected from our study of the dynamics of infection following mating between treated male *Anopheles gambiae* and *Anopheles coluzzii*.
+
+This analysis describes three primary experiments:
+
+- **Forced-mating experiments**
+  - CFU counts from couples
+  - Female survival following mating
+- **Auto-dissemination efficacy over time**
+  - Female infection following mating with males 1-48 hours after treatment
+  - Cohabitation control for extra-mating spore transfer
+- **Semi-field dissemination studies**
+  - Swarm characteristics in compartments
+  - Couple morality following mating opportunities
+
+This analysis is organized according to these experiments. Figures, important stats and major takeaways are highlighted throughout.
+
+## Forced-mating experiments
+### CFU counts from couples
+
+In these experiments, females were experimentally mated immediately with males in the laboratory. Spores present on males and delivered to females were assessed by counting colony forming units (CFUs) from macerated cadavers following mating. Males were treated with either a wild-type fungus (RFP) or a transgenic fungus expressing a spider toxin (Hybrid).
+
+```{r CFUs}
+CFU <- read.csv("Force mating mortality/CFU Counts.csv")
+
+CFU2 = CFU %>%
+  select(CFUs, Strain, Replicate, Sex) %>%
+  mutate(Strain=as.factor(Strain)) %>%
+  mutate(Strain=factor(Strain, levels=levels(Strain)[c(3, 2, 1)]), Sex=as.factor(Sex))
+
+CFU3 = CFU2 %>%
+  group_by(Strain, Sex) %>%
+  summarize(mean=mean(CFUs), median=median(CFUs), se=sd(CFUs)/sqrt(length(CFUs)), min=min(CFUs), max=max(CFUs))
+
+cfu.mod=aov(CFUs~Strain+Sex, data=CFU2)
+summary(cfu.mod)
+
+cfu.tuk=HSD.test(cfu.mod, trt=c("Strain", "Sex"))
+
+cfu.tuk.r=cfu.tuk$means %>%
+  rownames_to_column() %>%
+  separate(rowname, into=c("Strain", "Sex"), sep=":") %>%
+  select(Strain, Sex, r)
+  
+cfu.grouping=cfu.tuk$groups %>%
+  rownames_to_column() %>%
+  separate(rowname, into=c("Strain", "Sex"), sep=":") %>%
+  left_join(cfu.tuk.r) %>%
+  rename("n"=r) %>%
+  mutate(Strain=as.factor(Strain)) %>%
+  mutate(Strain=factor(Strain, levels=levels(Strain)[c(3, 2, 1)]))
+
+cfu.grouping
+
+theme = theme_bw()+theme(text = element_text(size=15), axis.title.x = element_text(size=25), axis.title.y = element_text(size=25), axis.text.x = element_text(size=15), axis.text.y = element_text(size=20), title = element_text(size=30), legend.title = element_text(size=25), legend.text = element_text(size=20), strip.text.x = element_text(size = 20, color = "black", face = "bold"),strip.background = element_rect(color="black", fill="white", size=1.5, linetype="solid"))
+
+palette <- c("#cc0000", "#29a329", "#007acc")
+
+cfu.plt=ggplot(CFU2, aes(x=CFUs, y=Strain, fill=Strain))+geom_violin(alpha=0.6)+facet_wrap(~Sex)+geom_jitter(shape=16, position=position_jitter(0.2))+stat_summary(fun=mean, geom="crossbar", size=1, color="black")+geom_label(inherit.aes=F, data=cfu.grouping, aes(y=Strain, x=CFUs+20, label=paste(signif(CFUs, digits=3), " (", groups, ")", sep="")), size=7)+theme+scale_fill_manual(values=palette)
+
+cfu.plt
+
+```
+
+ANOVA and Tukey's HSD comparing CFU counts across strain and sex revealed that strain does not have an effect on spores transferred. As expected since males were exposed directly, there were significantly more conidia on males (~104 conidia/male) compared to females (~9 conidia/female).
+
+### Female survival following mating
+
+Survival of females following this same procedure was also assessed.
+
+```{r force_mort}
+Force_mort <- read.csv("Force mating mortality/Female Mortality Force.csv")
+
+Force_mort2 = Force_mort %>%
+  rename(Mortality="Morality", Day="Days") %>%
+  select(-Mycosis)  %>%
+  mutate(Day=recode(Day, "Alives"="15")) %>%
+  mutate(Day=as.numeric(Day)) %>%
+  group_by(Treatment, Replicate) %>%
+  mutate(csum=cumsum(Mortality), n=max(csum), surv=1-csum/n) %>%
+  mutate(Treatment=as.factor(Treatment)) %>%
+  mutate(Treatment=factor(Treatment, levels=levels(Treatment)[c(3, 2, 1)]))
+
+Force_mort3 = Force_mort2 %>%
+  group_by(Treatment, Day) %>%
+  filter(Day!=15) %>%
+  summarize(mean=mean(surv), median=median(surv), se=sd(surv)/sqrt(length(surv)), min=min(surv), max=max(surv), n=length(surv))
+
+limits=aes(ymin=mean-se, ymax=mean+se)
+  
+fm.plt=ggplot(Force_mort3, aes(Day, mean, color=Treatment))+geom_line(size=2)+ geom_point(size=3)+ geom_errorbar(limits, size=1)+theme+ scale_y_continuous(labels=percent, limits=c(0,1))+ylab("Percent")+scale_color_manual(values=palette)+ggtitle("Female survival following\nlaboratory mating")+theme(plot.title=element_text(hjust=0.5))+scale_x_continuous(breaks=0:15)
+
+fm.plt
+
+#Function that converts mortality data to required Kaplan-Meier survival format
+convert_mortality=function(mort.dat){
+  dat=data.frame()
+  for(i in 1:length(mort.dat$Mortality)){
+    Day=mort.dat[i,]$Day
+    Treatment=mort.dat[i,]$Treatment
+    Replicate=mort.dat[i,]$Replicate
+    Mortality=mort.dat[i,]$Mortality
+    if(Mortality>0){
+      temp=data.frame(Day=rep(Day, times=Mortality),
+                      Treatment=rep(Treatment, times=Mortality),
+                      Replicate=rep(Replicate, times=Mortality),
+                      Status=rep(ifelse(Day!=15, 1, 0), times=Mortality))
+      dat=bind_rows(dat, temp)
+    }
+  }
+  return(dat)
+}
+
+fm.mort=convert_mortality(Force_mort2)
+
+survdiff(Surv(fm.mort$Day, fm.mort$Status)~fm.mort$Treatment)
+
+fm.dat=data.frame()
+for(i in sort(unique(fm.mort$Day))[1:length(unique(fm.mort$Day))-1]){
+  temp=fm.mort %>%
+    mutate(Status=ifelse(Day>i, 0, 1))
+  for(j in 1:length(combn(unique(as.character(temp$Treatment)), 2, simplify=F))){
+    fm.dat2=data.frame()
+    duo=unlist(combn(unique(as.character(temp$Treatment)), 2, simplify=F)[j])
+    temp2=temp %>% filter(Treatment %in% duo)
+    out=survdiff(Surv(temp2$Day, temp2$Status)~temp2$Treatment)
+    p.val=pchisq(q=out$chisq, df=length(out$n)-1, lower.tail=F)
+    fm.dat2=data.frame(Pair=toString(duo), Day=i, p.value=p.val)
+    fm.dat=bind_rows(fm.dat, fm.dat2)
+  }
+}
+
+thresh=0.01
+
+fm.dat3=fm.dat %>%
+  mutate(p.value=ifelse(p.value>=thresh, NA, p.value)) %>%
+  pivot_wider(id_cols=Day, names_from=Pair, values_from=p.value)
+
+fm.dat3
+
+```
+
+This mortality curve reveals that at this dose (estimated to be ~9 conidia), females died following mating with males treated with either the wild-type or transgenic fungus. Log-rank tests of the Kaplan-Meier survival estimate revealed that strain had a significant (p<0.01) effect on mortality.
+
+We further investigated daily pairwise survival (between strains), and found that the transgenic fungus has a significant effect compared to the control 3 days-post-mating (dpm). The wild-type fungus does not have this effect until 6 dpm. However, the transgenic fungus does not kill significantly more mosquitoes compared to the wild-type fungus until 8 dpm. These effects remained through the duration of our experiment (14 dpm).
+
+## Auto-dissemination efficacy over time
+### Female infection following mating with males 1-48 hours after treatment
+
+In these experiments, males were treated with either a wild-type fungus, a transgenic fungus or a blank control. Males were then held in containers for 1, 6, 12, 24 and 48 hours before females were introduced. Mating commenced naturally overnight, males were removed, and female survival was monitored over a two week period.
+
+```{r autodissemination}
+Autodis_HPI <- read.csv("Autodissemination/Autodis female mortality combined.csv")
+
+Autodis_insem = Autodis_HPI %>%
+  mutate(Treatment=str_replace(Treatment, "[0-9]+", "")) %>%
+  group_by(Male_hpi, Treatment, Replicate) %>%
+  summarize(Insemination=sum(Insemination), Dead=sum(Female_Mortality), Rate=Insemination/Dead)
+
+Autodis_insem2 = Autodis_HPI %>%
+  mutate(Treatment=str_replace(Treatment, "[0-9]+", "")) %>%
+  summarize(Insemination=sum(Insemination), Dead=sum(Female_Mortality), Rate=Insemination/Dead)
+
+Autodis.mod=aov(Rate~Male_hpi+Treatment, data=Autodis_insem)
+summary(Autodis.mod)
+
+Autodis.tuk=HSD.test(Autodis.mod, trt=c("Male_hpi", "Treatment"))
+
+Autodis.tuk.r=Autodis.tuk$means %>%
+  rownames_to_column() %>%
+  separate(rowname, into=c("Male_hpi", "Treatment"), sep=":") %>%
+  select(Treatment, Male_hpi, r)
+  
+Autodis.grouping=Autodis.tuk$groups %>%
+  rownames_to_column() %>%
+  separate(rowname, into=c("Male_hpi", "Treatment"), sep=":") %>%
+  left_join(Autodis.tuk.r) %>%
+  rename("n"=r) %>%
+  mutate(Treatment=as.factor(Treatment)) %>%
+  mutate(Treatment=factor(Treatment, levels=levels(Treatment)[c(3, 2, 1)]))
+
+Autodis.grouping
+
+Autodis_HPI2 = Autodis_HPI %>%
+  select(-Mycosis) %>%
+  mutate(Treatment=str_replace(Treatment, "1", ""),
+         Treatment=str_replace(Treatment, "2", "")) %>%
+  rename(Mortality=Female_Mortality) %>%
+  mutate(Day=recode(Day, "Alive"="15")) %>%
+  mutate(Day=as.numeric(Day)) %>%
+  group_by(Treatment, Male_hpi, Replicate) %>%
+  mutate(csum=cumsum(Mortality), n=max(csum), surv=1-csum/n) %>%
+  mutate(Treatment=as.factor(Treatment)) %>%
+  mutate(Treatment=factor(Treatment, levels=levels(Treatment)[c(3, 2, 1)]))
+
+Autodis_HPI3 = Autodis_HPI2 %>%
+  group_by(Treatment, Day, Male_hpi) %>%
+  filter(Day!=15) %>%
+  summarize(mean=mean(surv), median=median(surv), se=sd(surv)/sqrt(length(surv)), min=min(surv), max=max(surv), n=length(surv))
+
+Autodis_HPI_24 = Autodis_HPI2 %>%
+  group_by(Treatment, Day) %>%
+  filter(Day==14 & Male_hpi!=48) %>%
+  summarize(mean=1-mean(surv), median=median(surv), se=sd(surv)/sqrt(length(surv)), min=min(surv), max=max(surv), n=length(surv))
+
+limits=aes(ymin=mean-se, ymax=mean+se)
+  
+hpi.plt=ggplot(Autodis_HPI3, aes(Day, mean, color=as.factor(Male_hpi)))+geom_line(size=2)+ geom_point(size=3)+ geom_errorbar(limits, size=1)+theme+ scale_y_continuous(labels=percent, limits=0:1)+ylab("Percent")+scale_color_viridis_d()+ggtitle("Female survival following\ndelayed experimental mating")+theme(plot.title=element_text(hjust=0.5))+facet_wrap(~Treatment)+labs(color="Male HPI")
+
+hpi.plt
+
+kmort_hpi=convert_mortality(Autodis_HPI2 %>% mutate(Treatment=paste(Treatment, "_", Male_hpi, sep="")))
+
+kmort_hpi_rfp=convert_mortality(Autodis_HPI2 %>% filter(Treatment=="Hybrid" & Male_hpi<48) %>% rename(Trt=Treatment, Treatment=Male_hpi))
+
+survdiff(Surv(kmort_hpi_rfp$Day, kmort_hpi_rfp$Status)~kmort_hpi_rfp$Treatment)
+
+hpi.dat=data.frame()
+for(i in sort(unique(kmort_hpi$Day))[1:length(unique(kmort_hpi$Day))-1]){
+  temp=kmort_hpi %>%
+    mutate(Status=ifelse(Day>i, 0, 1))
+  for(j in 1:length(combn(unique(as.character(temp$Treatment)), 2, simplify=F))){
+    hpi.dat2=data.frame()
+    duo=unlist(combn(unique(as.character(temp$Treatment)), 2, simplify=F)[j])
+    temp2=temp %>% filter(Treatment %in% duo)
+    out=survdiff(Surv(temp2$Day, temp2$Status)~temp2$Treatment)
+    p.val=pchisq(q=out$chisq, df=length(out$n)-1, lower.tail=F)
+    hpi.dat2=data.frame(Pair=toString(duo), Day=i, p.value=p.val)
+    hpi.dat=bind_rows(hpi.dat, hpi.dat2)
+  }
+}
+
+hpi.dat3=hpi.dat %>%
+  mutate(p.value=ifelse(p.value>=thresh, NA, p.value)) %>%
+  filter(grepl("RFP", Pair)) %>%
+  filter(Day==14)
+
+hpi.dat3
+
+```
+
+When females died, they were disected to assess insemination status. Rates were calculated for each fungus treatment and male hpi. These both were found to have a significant effect on insemination rate. Investigating this further with Tukey's HSD test, we found that this effect is due to Hybrid treatments at 24 and 48 hpi. These were distinguishable from certain controls, but not all, due to these having the lowest insemination rates (64.3 and 56%, respectively). This may be an early signal of insemination rates lowering as infection advances in males. Despite this, since treatments were not consistently distinguishable, we estimated the average rate of insemination in these experiments to be 79.2%.
+
+Our graph representing female survival in this experiment is faceted by treatment and colored according to hours post infection for males within each group. This graph shows that sexual transmission of fungus infection drops for both fungal treatments 48 hours after males were treated. However, the effect of the wild-type fungus on survival 48 hpi significantly lower than the control. Survival of females that mated with 48 hpi Hybrid-treated males could not be distinguished from either RFP nor Control at this timepoint.
+
+Across 1 through 24 hours post infection, males treated with either fungus were similarly effective at killing female mating partners. However, before losing efficacy at 48 hpi, Hybrid treated males kill significantly more mates than RFP treated males. Males treated with RFP and mated 1 hpi are less infectious (53.9% mortality) than all Hybrid time-points before 24 hpi (73.2% mortality). It's noteworthy that mortality in Hybrid treatments across this period so closely approximates estimated overall insemination rate (6% difference).
+
+Taken together, these results suggest that males remain significantly and similarly infectious to mates over a 24 hour period, and across this entire period Hybrid-treated males kill approximately 20% more females under the same conditions.
+
+### Cohabitation control for container-contact spore transfer
+
+Since mating was allowed to progress naturally in containers, we wanted to test whether indirect/passive contact could account for observed mortality. In these experiments we measured the survival of 1) treated males and 2) females that shared a container with infected males, but did not mate.
+
+```{r successive}
+succ <- read.csv("Autodissemination/Control successive contact.csv")
+
+succ2 = succ %>%
+  select(-Mycosis)  %>%
+  mutate(Treatment=str_replace(Treatment, "Control_", "")) %>%
+  mutate(Day=recode(Day, "Alive"="15")) %>%
+  mutate(Day=as.numeric(Day)) %>%
+  group_by(Treatment, Sex, Replicate) %>%
+  mutate(csum=cumsum(Mortality), n=max(csum), surv=1-csum/n) %>%
+  mutate(Treatment=as.factor(Treatment)) %>%
+  mutate(Treatment=factor(Treatment, levels=levels(Treatment)[c(3, 2, 1)]))
+
+succ3 = succ2 %>%
+  group_by(Treatment, Day, Sex) %>%
+  filter(Day!=15) %>%
+  summarize(mean=mean(surv), median=median(surv), se=sd(surv)/sqrt(length(surv)), min=min(surv), max=max(surv), n=length(surv))
+
+limits=aes(ymin=mean-se, ymax=mean+se)
+  
+succ.plt=ggplot(succ3, aes(Day, mean, color=Treatment))+geom_line(size=2)+ geom_point(size=3)+ geom_errorbar(limits, size=1)+theme+ scale_y_continuous(labels=percent)+ylab("Percent")+scale_color_manual(values=palette)+ggtitle("Female mortality following\nsuccessive cohabitation")+theme(plot.title=element_text(hjust=0.5))+facet_wrap(~Sex)+scale_x_continuous(breaks=2:15)
+
+succ.plt
+
+kmort_male=convert_mortality(succ2 %>% filter(Sex=="Male"))
+survdiff(Surv(kmort_male$Day, kmort_male$Status)~kmort_male$Treatment)
+
+kmort_female=convert_mortality(succ2 %>% filter(Sex=="Female"))
+survdiff(Surv(kmort_female$Day, kmort_female$Status)~kmort_female$Treatment)
+
+```
+
+Since males were directly exposed and females were indirectly exposed to spores in this bioassay, male and female survival were analyzed separately. Following log-rank tests of the Kaplan-Meier survival estimate, we found strain significantly affected survival in males, with RFP killing ~91% of males and Hybrid killing 98%. Conversely, for females, we found no significant effect on survival due to cohabitation. This suggests our mating results are due to mating events. This is further supported by the observed leveling-off of survival in mating-based survival curves before reaching 100% mortality. Hybrid-toxin expressing fungi are capable of killing mosquitoes at a very low spore does, so this natural asymptote of mortality may approximate mating rate.
+
+## Semi-field dissemination studies
+### Swarm characteristics in compartments
+
+In the following experiments, 500 males exposed to spores in fungus-impregnated cages were released into semi-field compartments. This allowed males to swarm around dusk. Just before this event, 250 uninfected females were released into the compartment to allow for natural mating events (and possible spore transfer). We counted couples formed in each treatment/compartment (compartments were rotated each replicate). Swarms were formed and recorded according to certain positions within compartments. After an evening opportunity to mate, all mosquitoes were recaptured the next morning and their survival was monitored over two weeks.
+
+Additionally, we monitored swarming behavior of six replicates of untreated individuals across all compartments.
+
+```{r swarm}
+Trt.swarm <- read.csv("STD malaria sphere/STD treated swarm characteristics.csv")
+
+Trt.swarm2 = Trt.swarm %>%
+  separate(Compartment_Treatment, into=c("Compartment", "Treatment"), sep="_") %>%
+  mutate(Compartment=toupper(str_replace(Compartment, " ", "")),
+         Replicate=str_replace(Replicate, "Replicate", ""),
+         start.time=hm(Start),
+         stop.time=hm(Stop),
+         Duration=minute(start.time-stop.time)) %>%
+  mutate(Replicate=as.numeric(Replicate)+6) %>%
+  rename(Individuals="Total") %>%
+  mutate(Individuals=as.numeric(Individuals)) %>%
+  select(Replicate, Treatment, Compartment, Position, Duration, Couples, Individuals)
+
+Trt.swarm.couples=Trt.swarm2 %>%
+  select(-Duration)
+
+Trt.sw.mod=aov(Couples~Treatment+Compartment+Position, data=Trt.swarm.couples)
+summary(Trt.sw.mod)
+
+Swarm <- read.csv("STD malaria sphere/STD swarm characteristics.csv")
+
+Swarm2 = Swarm %>%
+  mutate(Compartment=toupper(str_replace(Compartment, " ", "")),
+         Replicate=as.numeric(str_replace(Replicate, "Replicate ", "")),
+         start.time=hm(Start),
+         stop.time=hm(Stop),
+         Duration=minute(start.time-stop.time)) %>%
+  rename(Individuals="Total") %>%
+  mutate(Individuals=as.numeric(Individuals)) %>%
+  select(Replicate, Compartment, Position, Duration, Couples, Individuals)
+
+Swarm.duration=Swarm2 %>%
+  drop_na(Duration) %>%
+  summarize(mn=mean(Duration, na.rm=T), n=length(Duration), sd=sd(Duration, na.rm=T))
+
+Swarm.couples=Swarm2 %>%
+  select(-Duration) %>%
+  bind_rows((Trt.swarm.couples %>% select(-Treatment)))
+
+sw.mod=aov(Couples~Position+Compartment, data=Swarm.couples)
+summary(sw.mod)
+
+sw.tuk=HSD.test(sw.mod, trt=c("Position", "Compartment"))
+
+sw.tuk.r=sw.tuk$means %>%
+  rownames_to_column() %>%
+  separate(rowname, into=c("Position", "Compartment"), sep=":") %>%
+  select(Position, Compartment, r)
+
+sw.grouping=sw.tuk$groups %>%
+  rownames_to_column() %>%
+  separate(rowname, into=c("Position", "Compartment"), sep=":") %>%
+  left_join(sw.tuk.r) %>%
+  rename("n"=r)
+
+sw.grouping
+
+sw.plt=ggplot(Swarm.couples, aes(x=as.factor(Replicate), y=Position, fill=Individuals))+geom_tile()+facet_wrap(~Compartment)+scale_fill_viridis_c()+theme+xlab("Replicate")
+
+sw.plt
+
+Swarm.couples2=Swarm.couples %>%
+  group_by(Replicate, Compartment) %>%
+  summarize(sum.coup=sum(Couples, na.rm=T))
+
+Swarm.couples2=Swarm.couples %>%
+  group_by(Replicate, Compartment) %>%
+  summarize(sum.coup=sum(Couples))
+
+Swarm.stat=Swarm.couples2 %>%
+  ungroup() %>%
+  summarize(mean=mean(sum.coup), sd=sd(sum.coup), n=length(sum.coup))
+
+sw.plt2=ggplot(Swarm.couples2, aes(x=Compartment, y=sum.coup, fill=Compartment))+geom_hline(yintercept=Swarm.stat$mean, linetype="dashed")+geom_violin(alpha=0.6)+geom_point(position=position_jitter(0.2), size=3, aes(color=as.factor(Replicate)))+theme+scale_fill_manual(values=grey.colors(8))+scale_color_viridis_d()+ ylab("Couples")+scale_y_continuous(limits=c(0,150))+labs(color="Replicate")
+
+sw.plt2
+
+Swarm.comp.pos=Swarm.couples %>%
+  group_by(Compartment, Position) %>%
+  summarize(mn.coup=mean(Couples, na.rm=T))
+
+Position=c("E4", "E3", "E1", "E2", "E5")
+pos.x=c(1,3,1,3,2)
+pos.y=c(3,3,1,1,2)
+pos.key=data.frame(Position, pos.x, pos.y)
+
+comp.ord=c(3, 1, 4, 2)
+
+Swarm.comp.pos2=Swarm.comp.pos %>%
+  left_join(pos.key) %>%
+  mutate(Compartment=as.factor(Compartment)) %>%
+  mutate(Compartment=factor(Compartment, levels=levels(Compartment)[comp.ord]))
+
+sw.plt1.5=ggplot(Swarm.comp.pos2, aes(x=pos.x, y=pos.y, fill=mn.coup))+geom_tile()+facet_wrap(~Compartment)+scale_fill_viridis_c()+theme+theme(axis.text.y=element_blank(), axis.title.y=element_text(size=30), axis.text.x=element_blank(), axis.title.x=element_blank(), plot.title=element_text(size=30, hjust = 0.5), axis.ticks=element_blank(), panel.grid.major=element_blank(), panel.grid.minor=element_blank())+geom_label(aes(label=Position), color="white", size=10)+ labs(fill="Mean\ncouples")+ylab("West (Sunset)")+ggtitle("North")
+
+sw.plt1.5
+
+```
+
+Initially, we assessed whether the number of couples was impacted by treatment, position and compartment in experiments with treated individuals. With these data, we found that the number of couples was only significantly impacted by position within compartments (p<0.01). Treatment was found to have no significant effect on the number of couples. Considering this, we combined data on couple formation from this experiment with our data studying mating in only untreated individuals for our analysis of swarm characteristics.
+
+True to field conditions, swarm characteristics were complex. With the combined data, coupling was significantly effected by position within compartments (p<0.01) and, to a lesser extent (p<0.05), compartment. This effect was visualized using a heat map displaying compartments and position. This shows the trend, which distinguishes E4 (the northwestern corner) as the position where most couples were observed across compartments. Compartments 4 and 1 had markedly more couples on average than Compartments 2 and 3. Despite treatments rotating through compartments, noticeably more couples were observed in Replicate 3 and Replicate 5 (replicates from experiments with fungi were included as 7-10). These effects are also clear in the violin/scatter plot representing total couples in compartments for each replicate.
+
+The plotted spatial orientation of compartments and the positions where couples were observed in those compartments shows that couples predominantly formed on the West side of compartments (nearest to the setting sun). This can inform expectations for couples within these compartments. This can also inform the design of future such facilities for observing mosquito behavior. A facility that maximizes an unobstructed view to West (i.e., a linear arrangement of compartments with the long edge facing West) may both maximize and standardize couple formation. We found swarms lasted on 43 minutes on average.
+
+We estimated the number of couples observed across all compartments in this experiment to be ~61 couples (24.4% of females and 12.2% of males). This value is marked by a dotted line in the violin plots.
+
+### Couple morality following mating opportunities
+
+We assessed survival following recapture of all individuals involved in overnight mating described above.
+
+```{r semifield}
+mort_re <- read.csv("STD malaria sphere/Mortality_Recapture_Combined.csv")
+
+mort_re2 = mort_re %>%
+  select(-Date, -Mycosis) %>%
+  separate(Comp_Treatment, into=c("Compartment", "Treatment", "Technical")) %>%
+  select(-Technical, -Compartment) %>%
+  group_by(Day, Treatment, Sex, Replicate) %>%
+  summarize(Mort=sum(Mortality)) %>%
+  mutate(Day=recode(Day, "Alive"="15")) %>%
+  mutate(Day=as.numeric(Day)) %>%
+  arrange(Treatment, Sex, Replicate, Day) %>%
+  group_by(Treatment, Sex, Replicate) %>%
+  mutate(csum=cumsum(Mort), n=max(csum), surv=1-csum/n) %>%
+  mutate(Treatment=as.factor(Treatment)) %>%
+  mutate(Treatment=factor(Treatment, levels=levels(Treatment)[c(3, 2, 1)]))
+
+mort_re3 = mort_re2 %>%
+  group_by(Treatment, Sex, Day) %>%
+  filter(Day!=15) %>%
+  summarize(mean=mean(surv), median=median(surv), se=sd(surv)/sqrt(length(surv)), min=min(surv), max=max(surv), n=length(surv))
+
+limits=aes(ymin=mean-se, ymax=mean+se)
+  
+mort.plt=ggplot(mort_re3, aes(Day, mean, color=Treatment))+geom_line(size=2)+ geom_point(size=3)+ geom_errorbar(limits, size=1)+theme+ scale_y_continuous(labels=percent)+ylab("Percent")+scale_color_manual(values=palette)+ggtitle("Female survival following\nsemi-field mating")+theme(plot.title=element_text(hjust=0.5))+facet_wrap(~Sex)+scale_x_continuous(breaks=0:15)+theme(panel.spacing = unit(1, "lines"))
+
+mort.plt
+
+fem.test=convert_mortality(mort_re2 %>% filter(Sex=="Female") %>% rename(Mortality=Mort))
+
+survdiff(Surv(fem.test$Day, fem.test$Status)~fem.test$Treatment)
+
+fem.dat=data.frame()
+for(i in sort(unique(fem.test$Day))[1:length(unique(fem.test$Day))-1]){
+  temp=fem.test %>%
+    mutate(Status=ifelse(Day>i, 0, 1))
+  for(j in 1:length(combn(unique(as.character(temp$Treatment)), 2, simplify=F))){
+    fem.dat2=data.frame()
+    duo=unlist(combn(unique(as.character(temp$Treatment)), 2, simplify=F)[j])
+    temp2=temp %>% filter(Treatment %in% duo)
+    out=survdiff(Surv(temp2$Day, temp2$Status)~temp2$Treatment)
+    p.val=pchisq(q=out$chisq, df=length(out$n)-1, lower.tail=F)
+    fem.dat2=data.frame(Pair=toString(duo), Day=i, p.value=p.val)
+    fem.dat=bind_rows(fem.dat, fem.dat2)
+  }
+}
+
+fem.dat3=fem.dat %>%
+  mutate(p.value=ifelse(p.value>=thresh, NA, p.value)) %>%
+  pivot_wider(id_cols=Day, names_from=Pair, values_from=p.value)
+
+fem.dat3
+
+male.test=convert_mortality(mort_re2 %>% filter(Sex=="Male") %>% rename(Mortality=Mort))
+
+survdiff(Surv(male.test$Day, male.test$Status)~male.test$Treatment)
+
+male.dat=data.frame()
+for(i in sort(unique(male.test$Day))[1:length(unique(male.test$Day))-1]){
+  temp=male.test %>%
+    mutate(Status=ifelse(Day>i, 0, 1))
+  for(j in 1:length(combn(unique(as.character(temp$Treatment)), 2, simplify=F))){
+    male.dat2=data.frame()
+    duo=unlist(combn(unique(as.character(temp$Treatment)), 2, simplify=F)[j])
+    temp2=temp %>% filter(Treatment %in% duo)
+    out=survdiff(Surv(temp2$Day, temp2$Status)~temp2$Treatment)
+    p.val=pchisq(q=out$chisq, df=length(out$n)-1, lower.tail=F)
+    male.dat2=data.frame(Pair=toString(duo), Day=i, p.value=p.val)
+    male.dat=bind_rows(male.dat, male.dat2)
+  }
+}
+
+male.dat3=male.dat %>%
+  mutate(p.value=ifelse(p.value>=thresh, NA, p.value)) %>%
+  pivot_wider(id_cols=Day, names_from=Pair, values_from=p.value)
+
+male.dat3
+
+```
+
+In these striking survival curves, males exposed to a high dose of spores of either fungus died off quickly and nearly completely. Hybrid-treated males are significantly different from the control starting on day 2. Survival of these males was significantly lower than the wild-type fungus by day 4. The wild-type fungus was significantly different from the control starting on day 3. These all line up with our expectation for these fungal strains at a very high dose.
+
+Females were exposed to fungus through mating, and so their mortality is likely due to a exposure to a low number of spores. Here, the lower dose required to reliably kill a mosquito with the transgenic fungus is on full display. These effects were more gradual, due perhaps in part to less overall mortality mosquitoes being infected, but the transgenic fungus killed significantly more mosquitoes than both the wild-type fungus and control by day 4. The wild-type fungus began to be significantly different from the control on day 5; however, the Hybrid fungus remained nearly double effective for the duration of the experiment.
+
+As mentioned above, the sigmoidal survival curve tapering off at an asymptote approximates mating rate for females in Hybrid treatments. Overall mortality in females that mated with Hybrid-exposed males was estimated to be 26.1%. Overall mortality in females that mated with RFP-exposed males was 16%. Considering our estimated mating rate for females (24.4%), this suggests that 100% of females that mated with Hybrid-exposed males likely died. When mating with males exposed to the wild-type fungus, by contrast, 65% of mated females died. Alternatively, the number of couples is ~1.6 times the number of individuals that died following mating.
+
+These results underscore the value these fungi—particularly transgenic strains but wild-type strains also—can contribute to a mating-based strategy where males are released to encounter female mosquitoes (e.g., sterile male *Wolbachia*-based techniques). More fundamentally, this also illuminates a role for these fungi in unraveling mating dynamics of insect hosts, which can often be difficult and time consuming to observe.

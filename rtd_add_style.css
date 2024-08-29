@@ -1,0 +1,82 @@
+/* General styling */
+
+h1,h2,h3,h4,h5,h6,legend{
+    font-family:"Roboto Slab","ff-tisa-web-pro","Georgia",Arial,sans-serif;
+    font-weight:700;
+    color: #0e97ab;
+}
+
+/* Sidebar top */
+#sidebar h2{
+    z-index:200;
+    background-color:#0e97ab;
+    text-align:center;
+    padding:0.809em;
+    display:block;
+    color:#fcfcfc;
+    font-size: 100%;
+    margin-top: 0px;
+    margin-bottom:0.809em;
+}
+
+/* Sidebar middle */
+#sidebar {
+    position:fixed;
+    top:0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height:100%;
+    background:#162b2e;
+    z-index:200;
+    font-size: 16px;
+}
+
+/* Postamble top */
+#postamble{
+    color:#162b2e;
+    background:#dcf4f5;
+    border-top:solid 10px #162b2e;
+    font-family:"Lato","proxima-nova","Helvetica Neue",Arial,sans-serif;
+    font-size: 90%;
+    z-index:400;
+    padding:12px;
+}
+/* Postamble date */
+#postamble .date {
+    font-size: 100%;
+    margin-bottom: 0px;
+    color: #162b2e;
+}
+
+/* Set width */
+#content{
+    background:#fcfcfc;
+    height100%;
+    margin-left:300px;
+    /* margin:auto; */
+    max-width:1000px;
+    min-height:100%;
+}
+
+body{
+    background:#dcf4f5;
+    color:#404040;
+    font-family:"Lato","proxima-nova","Helvetica Neue",Arial,sans-serif;
+    font-weight:normal;
+    margin:0;
+    min-height:100%;
+}
+
+code{
+    background:#dcf4f5;
+    border:solid 1px #e1e4e5;
+    color: #162b2e;
+    /* color:#000;  for clickable code */
+    font-size:85%;
+    max-width:100%;
+    overflow-x:auto;
+ø    padding:0 5px;
+    white-space: pre;
+}
+

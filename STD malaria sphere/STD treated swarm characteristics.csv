@@ -1,0 +1,81 @@
+﻿Date,Replicate,Compartment_Treatment,Position,Start,Stop,Couples,Total,Strain
+8/1/16,Replicate1,C1_Control,E1,,19h03,6,20,Anopheles coulizzii vk5
+8/1/16,Replicate1,C1_Control,E2,na,na,0,0,Anopheles coulizzii vk5
+8/1/16,Replicate1,C1_Control,E3,na,na,0,0,Anopheles coulizzii vk5
+8/1/16,Replicate1,C1_Control,E4,18h49,19h03,26,60,Anopheles coulizzii vk5
+8/1/16,Replicate1,C1_Control,E5,na,na,0,0,Anopheles coulizzii vk5
+8/1/16,Replicate1,C2_Hybrid A,E1,18h49,19h03,15,60,Anopheles coulizzii vk5
+8/1/16,Replicate1,C2_Hybrid A,E2,na,na,0,0,Anopheles coulizzii vk5
+8/1/16,Replicate1,C2_Hybrid A,E3,18h49,19h03,5,30,Anopheles coulizzii vk5
+8/1/16,Replicate1,C2_Hybrid A,E4,18h49,19h03,5,30,Anopheles coulizzii vk5
+8/1/16,Replicate1,C2_Hybrid A,E5,na,na,0,0,Anopheles coulizzii vk5
+8/1/16,Replicate1,C3_RFP,E1,18h49,19h03,15,50,Anopheles coulizzii vk5
+8/1/16,Replicate1,C3_RFP,E2,18h49,19h03,3,15,Anopheles coulizzii vk5
+8/1/16,Replicate1,C3_RFP,E3,na,na,0,0,Anopheles coulizzii vk5
+8/1/16,Replicate1,C3_RFP,E4,18h49,19h03,27,60,Anopheles coulizzii vk5
+8/1/16,Replicate1,C3_RFP,E5,na,na,0,0,Anopheles coulizzii vk5
+8/1/16,Replicate1,C4_Hybrid B,E1,18h49,19h03,21,80,Anopheles coulizzii vk5
+8/1/16,Replicate1,C4_Hybrid B,E2,18h49,19h03,0,0,Anopheles coulizzii vk5
+8/1/16,Replicate1,C4_Hybrid B,E3,18h49,19h03,0,0,Anopheles coulizzii vk5
+8/1/16,Replicate1,C4_Hybrid B,E4,18h49,19h03,0,0,Anopheles coulizzii vk5
+8/1/16,Replicate1,C4_Hybrid B,E5,na,na,0,0,Anopheles coulizzii vk5
+8/3/16,Replicate2,C1_Hybrid A,E1,na,na,0,0,Anopheles coulizzii vk5
+8/3/16,Replicate2,C1_Hybrid A,E2,na,na,0,0,Anopheles coulizzii vk5
+8/3/16,Replicate2,C1_Hybrid A,E3,na,na,0,0,Anopheles coulizzii vk5
+8/3/16,Replicate2,C1_Hybrid A,E4,na,na,0,0,Anopheles coulizzii vk5
+8/3/16,Replicate2,C1_Hybrid A,E5,na,na,0,0,Anopheles coulizzii vk5
+8/3/16,Replicate2,C2_Control,E1,18h52,19h07,4,15,Anopheles coulizzii vk5
+8/3/16,Replicate2,C2_Control,E2,na,na,0,0,Anopheles coulizzii vk5
+8/3/16,Replicate2,C2_Control,E3,18h52,19h07,1,15,Anopheles coulizzii vk5
+8/3/16,Replicate2,C2_Control,E4,18h52,19h07,8,60,Anopheles coulizzii vk5
+8/3/16,Replicate2,C2_Control,E5,na,na,0,0,Anopheles coulizzii vk5
+8/3/16,Replicate2,C3_Hybrid B,E1,18h52,19h07,19,60,Anopheles coulizzii vk5
+8/3/16,Replicate2,C3_Hybrid B,E2,na,na,0,0,Anopheles coulizzii vk5
+8/3/16,Replicate2,C3_Hybrid B,E3,na,na,0,0,Anopheles coulizzii vk5
+8/3/16,Replicate2,C3_Hybrid B,E4,18h52,19h07,5,40,Anopheles coulizzii vk5
+8/3/16,Replicate2,C3_Hybrid B,E5,na,na,0,0,Anopheles coulizzii vk5
+8/3/16,Replicate2,C4_RFP,E1,18h52,19h07,10,60,Anopheles coulizzii vk5
+8/3/16,Replicate2,C4_RFP,E2,na,na,0,0,Anopheles coulizzii vk5
+8/3/16,Replicate2,C4_RFP,E3,na,na,0,0,Anopheles coulizzii vk5
+8/3/16,Replicate2,C4_RFP,E4,18h52,19h07,117,100,Anopheles coulizzii vk5
+8/3/16,Replicate2,C4_RFP,E5,na,na,0,0,Anopheles coulizzii vk5
+8/4/16,Replicate3,C1_RFP,E1,18h49,19h04,5,30,Anopheles coulizzii vk5
+8/4/16,Replicate3,C1_RFP,E2,na,na,0,0,Anopheles coulizzii vk5
+8/4/16,Replicate3,C1_RFP,E3,18h49,19h04,0,20,Anopheles coulizzii vk5
+8/4/16,Replicate3,C1_RFP,E4,18h49,19h04,45,60,Anopheles coulizzii vk5
+8/4/16,Replicate3,C1_RFP,E5,na,na,0,0,Anopheles coulizzii vk5
+8/4/16,Replicate3,C2_Hybrid B,E1,18h49,19h04,4,30,Anopheles coulizzii vk5
+8/4/16,Replicate3,C2_Hybrid B,E2,na,na,0,0,Anopheles coulizzii vk5
+8/4/16,Replicate3,C2_Hybrid B,E3,na,na,0,0,Anopheles coulizzii vk5
+8/4/16,Replicate3,C2_Hybrid B,E4,18h49,19h04,23,60,Anopheles coulizzii vk5
+8/4/16,Replicate3,C2_Hybrid B,E5,na,na,0,0,Anopheles coulizzii vk5
+8/4/16,Replicate3,C3_Control,E1,18h49,19h04,30,60,Anopheles coulizzii vk5
+8/4/16,Replicate3,C3_Control,E2,na,na,0,0,Anopheles coulizzii vk5
+8/4/16,Replicate3,C3_Control,E3,na,na,0,0,Anopheles coulizzii vk5
+8/4/16,Replicate3,C3_Control,E4,18h49,19h07,11,30,Anopheles coulizzii vk5
+8/4/16,Replicate3,C3_Control,E5,18h49,19h07,66,80,Anopheles coulizzii vk5
+8/4/16,Replicate3,C4_Hybrid A,E1,18h49,19h07,27,60,Anopheles coulizzii vk5
+8/4/16,Replicate3,C4_Hybrid A,E2,na,na,0,0,Anopheles coulizzii vk5
+8/4/16,Replicate3,C4_Hybrid A,E3,na,na,0,0,Anopheles coulizzii vk5
+8/4/16,Replicate3,C4_Hybrid A,E4,18h49,19h07,102,120,Anopheles coulizzii vk5
+8/4/16,Replicate3,C4_Hybrid A,E5,na,na,0,0,Anopheles coulizzii vk5
+8/5/16,Replicate4,C1_Hybrid B,E1,na,na,0,0,Anopheles coulizzii vk5
+8/5/16,Replicate4,C1_Hybrid B,E2,na,na,0,0,Anopheles coulizzii vk5
+8/5/16,Replicate4,C1_Hybrid B,E3,18H51,19HO6,0,15,Anopheles coulizzii vk5
+8/5/16,Replicate4,C1_Hybrid B,E4,18H51,19HO6,58,100,Anopheles coulizzii vk5
+8/5/16,Replicate4,C1_Hybrid B,E5,na,na,0,0,Anopheles coulizzii vk5
+8/5/16,Replicate4,C2_RFP,E1,18H51,19HO6,35,60,Anopheles coulizzii vk5
+8/5/16,Replicate4,C2_RFP,E2,na,na,0,0,Anopheles coulizzii vk5
+8/5/16,Replicate4,C2_RFP,E3,na,na,0,0,Anopheles coulizzii vk5
+8/5/16,Replicate4,C2_RFP,E4,18H51,19HO6,9,40,Anopheles coulizzii vk5
+8/5/16,Replicate4,C2_RFP,E5,18H51,19HO6,10,40,Anopheles coulizzii vk5
+8/5/16,Replicate4,C3_Hybrid A,E1,18H51,19HO6,34,60,Anopheles coulizzii vk5
+8/5/16,Replicate4,C3_Hybrid A,E2,na,na,0,0,Anopheles coulizzii vk5
+8/5/16,Replicate4,C3_Hybrid A,E3,na,na,0,0,Anopheles coulizzii vk5
+8/5/16,Replicate4,C3_Hybrid A,E4,18H51,19HO6,0,15,Anopheles coulizzii vk5
+8/5/16,Replicate4,C3_Hybrid A,E5,18H51,19HO6,20,80,Anopheles coulizzii vk5
+8/5/16,Replicate4,C4_Control,E1,18H50,19H03,20,60,Anopheles coulizzii vk5
+8/5/16,Replicate4,C4_Control,E2,na,na,0,0,Anopheles coulizzii vk5
+8/5/16,Replicate4,C4_Control,E3,na,na,0,0,Anopheles coulizzii vk5
+8/5/16,Replicate4,C4_Control,E4,18H50,19H03,85,120,Anopheles coulizzii vk5
+8/5/16,Replicate4,C4_Control,E5,na,na,0,0,Anopheles coulizzii vk5
